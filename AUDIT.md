@@ -162,19 +162,35 @@
 
 ---
 
-# Problème 5
+## Problème 5 - Rupture de la hiérarchie des titres sur les cartes d'atelier
 
 ### Problème identifié
+ 
+Le titre de chaque atelier utilise un simple paragraphe `<p className="workshop-title">` au lieu d'un élément de titre
 
 #### Impact
 
+- Pour un utilisateur de lecteur d'écran : impossibilité de naviguer rapidement d'atelier en atelier via les raccourcis clavier
+
 ### Reproduction
+
+- Ouvrir la page dans un nouvel onglet pour être au neuf
+- Activer un lecteur d'écran et utiliser la numérisation de la page
+- Naviguer en utilisant les raccourcis du navigateur (la touche `H` pour windows 11)
+- Aucun des titres d'ateliers individuels n'est listé ou atteignable
 
 ### Comportement attendu
 
+- Pouvoir naviguer directement d'un atelier à l'autre via les raccourcis du lecteur d'écran
+
 ### Correction à apporter
 
+- Remplacer `<p ...>` par `<h3 ...>` pour les titres des ateliers dans `src/components/WorkshopCard.tsx`
+
 #### Résultat de la vérification
+
+- Chaque carte d'atelier expose un titre de niveau 3 dans l'arbre d'accessibilité
+- Les utilisateurs de lecteur d'écran peuvent parcourir les ateliers avec les raccourcis de la navigation du lecteur d'écran
 
 ---
 
