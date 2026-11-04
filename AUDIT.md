@@ -123,8 +123,8 @@
 
 #### Résultat de la vérification
 
-- Le lecteur d'écran annonce l'étiquette « Rechercher un atelier » et le texte d'aide « Saisissez un titre ou une ville. » lors de la prise de focus
-- Cliquer sur le libellé « Rechercher un atelier » transfère immédiatement le focus dans le champ de recherche
+- Le lecteur d'écran annonce le libellé du champ de recherche et son texte d'aide lors de la prise de focus
+- Cliquer sur le libellé transfère immédiatement le focus dans le champ de recherche
 
 ---
 
