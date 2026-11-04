@@ -12,9 +12,7 @@ export default function WorkshopCard({ workshop, onReserve, extraAction }: Props
   return (
     <article className="workshop-card">
       <div className="card-art">
-        {workshop.id === "serigraphie"
-          ? <img src={workshop.image} />
-          : <img src={workshop.image} alt="" />}
+        <img src={workshop.image} alt={`Image de ${workshop.id}`} />
         <span className="category">{workshop.category}</span>
       </div>
 

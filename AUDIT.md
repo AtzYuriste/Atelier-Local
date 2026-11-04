@@ -103,19 +103,37 @@
 
 ---
 
-# Problème 4
+## Problème 4 - Alternative textuelle manquante sur l'image d'un atelier
 
 ### Problème identifié
 
+- L'image de la carte de l'atelier `serigraphie` n'a pas d'attribut `alt` :
+  - le lecteur d'écran n'a aucune alternative textuelle et annonce à la place le nom du fichier ou l'URL de l'image ;
+  - les images des autres ateliers ont `alt=""` : elles sont ignorées par le lecteur d'écran, donc le traitement des images est incohérent d'une carte à l'autre
+
 #### Impact
+
+- Pour un utilisateur de lecteur d'écran : information parasite (nom de fichier) pour l'atelier `serigraphie`, et aucune information sur l'image pour les autres ateliers
 
 ### Reproduction
 
+- Activer un lecteur d'écran et parcourir les cartes d'ateliers avec les touches de lecture
+- Sur la carte `serigraphie`, l'image est annoncée avec son nom de fichier
+- Sur les autres cartes, l'image n'est pas annoncée
+
 ### Comportement attendu
+
+- Chaque image d'atelier possède un attribut `alt` et est traitée de la même façon par le lecteur d'écran
 
 ### Correction à apporter
 
+- Supprimer la condition sur `workshop.id === "serigraphie"` dans `WorkshopCard.tsx` et afficher la même balise `<img>` pour tous les ateliers
+  - Y ajouter ``alt={`Icone de ${workshop.id}`}`` pour donner une alternative textuelle à chaque image
+
 #### Résultat de la vérification
+
+- Le lecteur d'écran n'annonce plus de nom de fichier pour l'atelier `serigraphie`
+- Toutes les images d'atelier ont une alternative textuelle identique dans sa forme
 
 ---
 
