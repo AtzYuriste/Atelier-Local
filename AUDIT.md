@@ -194,16 +194,37 @@ Le titre de chaque atelier utilise un simple paragraphe `<p className="workshop-
 
 ---
 
-# Problème 6
+## Problème 6 - Résultat de l'inscription non annoncé
 
 ### Problème identifié
 
+- Le message de confirmation affiché après un clic sur `M’inscrire à ...` n'est pas communiqué aux technologies d'assistance :
+  - il apparaît dans le conteneur `#registration-result`, situé sous toute la grille des ateliers, loin du bouton cliqué ;
+  - ce conteneur n'est pas une zone « vivante » : le lecteur d'écran n'annonce pas l'apparition du message ;
+  - le focus reste sur le bouton, sans aucune indication qu'un résultat a été affiché ailleurs dans la page
+
 #### Impact
+
+- Pour un utilisateur de lecteur d'écran : aucun retour après l'activation du bouton, impossibilité de savoir si l'inscription a été prise en compte
+- Pour une personne en navigation clavier ou avec un fort agrandissement : le message est hors de la zone visible et peut passer inaperçu
 
 ### Reproduction
 
+- Ouvrir la page dans un nouvel onglet pour être au neuf
+- Activer un lecteur d'écran et atteindre le bouton `M’inscrire à ...` d'un atelier avec la touche `Tab`
+- L'activer avec `Entrée` ou `Espace`
+- Le lecteur d'écran n'annonce rien, et le message de confirmation s'affiche en bas de la liste des ateliers
+
 ### Comportement attendu
+
+- Le message de confirmation est annoncé automatiquement par le lecteur d'écran dès qu'il apparaît, sans déplacer le focus
 
 ### Correction à apporter
 
+- Ajouter `role="status"` sur le conteneur `<div className="registration-result" id="registration-result">` dans `src/App.tsx`
+  - Le conteneur est toujours présent dans la page, y compris vide, pour que l'ajout du texte soit annoncé
+
 #### Résultat de la vérification
+
+- Le lecteur d'écran annonce le message de confirmation dès l'activation du bouton `M’inscrire à ...`
+- Le focus reste sur le bouton
