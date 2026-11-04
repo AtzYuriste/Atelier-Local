@@ -59,6 +59,9 @@ export default function App() {
               </div>
             ) :
             <p className="empty-state">Aucun atelier ne correspond. Essayez un autre titre ou une autre ville.</p>}
+          <div className="registration-result" id="registration-result" role="status">
+            <p className={notice ? "notice" : "notice-empty"}>{notice}</p>
+          </div>
         </section>
 
         <section className="how-it-works" id="infos-pratiques" aria-labelledby="how-title">
@@ -66,9 +69,7 @@ export default function App() {
           <div className="how-grid"><div><span>01</span><h3>Choisissez votre atelier</h3><p>Retrouvez le lieu, la durée et le tarif dans le programme.</p></div><div><span>02</span><h3>Préparez votre venue</h3><p>Consultez les détails pour savoir ce qui est fourni et ce qu’il faut apporter.</p></div><div><span>03</span><h3>Prenez le temps de créer</h3><p>Les ateliers présentés ici sont fictifs. Toutes les actions sont des démonstrations locales.</p></div></div>
         </section>
 
-        <div className="registration-result">
-          <p className={notice ? "notice" : "notice-empty"}>{notice}</p>
-        </div>
+
 
       </main>
 
