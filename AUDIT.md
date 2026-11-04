@@ -3,7 +3,7 @@
 ## Binôme et environnement
 
 - Membres : _à voir sur Discord_
-- Navigateur et version : Opera One(version : 137.0.6036.63)
+- Navigateur et version : Opera One(version : 137.0.6036.63) (problèmes 1, 3, 5)
 
 ## Problème 1 - Parcours des détails d’un atelier
 
