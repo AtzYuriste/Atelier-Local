@@ -47,9 +47,9 @@ export default function App() {
           <div className="section-heading"><div><p className="eyebrow">Le programme</p><h2 id="catalogue-title">Les prochains ateliers</h2></div><span className="count" role="status" aria-label="Résultats de recherche" aria-atomic="true">{visible.length} atelier{visible.length > 1 ? "s" : ""}</span></div>
           
           <div className="search-area">
-            <p className="search-label">Rechercher un atelier</p>
-            <input type="search" id="workshop-search" value={query} onChange={event => setQuery(event.target.value)} />
-            <p className="search-help">Saisissez un titre ou une ville.</p>
+            <label className="search-label" htmlFor="workshop-search">Rechercher un atelier</label>
+            <input aria-describedby="search-help" type="search" id="workshop-search" value={query} onChange={event => setQuery(event.target.value)} />
+            <p className="search-help" id="search-help">Saisissez un titre ou une ville.</p>
           </div>
           
           {visible.length > 0 ? 

@@ -12,7 +12,7 @@
 - Le bouton (c'est pas un bouton) `Détails de l’atelier` pour afficher les détails de l'atelier :
   - n'est pas sélectionnable au clavier ;
   - le lecteur d'écran n'a aucune indication de son rôle ni de son état ;
-  - ne donne pas non plus l'information de l'atelier au lecteur d'écran ;
+  - ne donne pas non plus l'information de l'atelier au lecteur d'écran
 - Lorsque les détails sont repliés, le lien `Consulter les informations pratiques` reste sélectionnable via un parcours au clavier
 
 #### Impact
@@ -36,9 +36,9 @@
 ### Correction à apporter
 
 - Remplacer la zone cliquable `<div>` de `details-trigger` par un bouton `<button>`
-  - Y ajouter `type="button"` pour indiquer le rôle de bouton
-  - Y ajouter `aria-expanded={expanded}` pour indiquer si les détails sont affichés ou masqués
-  - Y ajouter ``aria-controls={`details-${workshop.id}`}`` pour informer de l'identifiant du conteneur
+  - Y ajouter `type="button"` pour indiquer le rôle de bouton ;
+  - Y ajouter `aria-expanded={expanded}` pour indiquer si les détails sont affichés ou masqués ; 
+  - Y ajouter ``aria-controls={`details-${workshop.id}`}`` pour informer de l'identifiant du conteneur ;
   - Y ajouter `aria-label={`Détails de l’atelier ${workshop.title}`}` pour indiquer l'atelier concerné
 - Ajouter `hidden={!expanded}` sur le conteneur `details-panel` pour réellement retirer les détails, s'ils sont masqués
   - Y ajouter ``id={`details-${workshop.id}`}`` pour donner un identifiant au conteneur, utilisé par `aria-controls`
@@ -47,8 +47,8 @@
 
 - Le bouton `Détails de l’atelier` est sélectionnable via un parcours au clavier
 - Il peut être activer avec `Entrée` ou `Espace`
-- Il transmet dynamiquement son rôle, son état et l'information de l'atelier au lecteur d'écran.
-- La touche `Tab` saute le lien `Consulter les informations pratiques` si les détails sont masqués.
+- Il transmet dynamiquement son rôle, son état et l'information de l'atelier au lecteur d'écran
+- La touche `Tab` saute le lien `Consulter les informations pratiques` si les détails sont masqués
 
 ---
 
@@ -58,7 +58,7 @@
 
 - Le bouton `M’inscrire à ...` d'un atelier ne montre aucun indicateur visuel lorsqu'il reçoit le focus :
   - la règle `.reserve-button:focus-visible` retire le contour avec `outline: none` et `box-shadow: none` ;
-  - elle écrase le style de focus global défini pour tous les boutons de la page ;
+  - elle écrase le style de focus global défini pour tous les boutons de la page
 
 #### Impact
 
@@ -78,7 +78,7 @@
 ### Correction à apporter
 
 - Retirer la règle `.reserve-button:focus-visible` de `src/styles.css`
-  - Le bouton reprend ainsi le style de focus global `button:focus-visible` (`outline: 3px solid #4338a8` et `outline-offset: 4px`)
+  - Le bouton reprend ainsi le style de focus global `button:focus-visible`
 
 #### Résultat de la vérification
 
@@ -87,19 +87,44 @@
 
 ---
 
-## Problème 3
+## Problème 3 - Absence d'étiquetage accessible sur le champ de recherche
 
 ### Problème identifié
 
+- Le champ de recherche d'ateliers ne dispose d'aucune étiquette accessible :
+  - le texte `Rechercher un atelier` utilise un simple paragraphe `<p class="search-label">` ;
+  - le lecteur d'écran annonce le champ comme une simple zone de saisie sans indiquer son nom accessible ni sa fonction ;
+  - le texte d'aide `Saisissez un titre ou une ville.` n'est pas associé au champ via `aria-describedby` ;
+  - un clic sur l'intitulé textuel ne transfère pas le focus dans le champ de recherche
+
 #### Impact
+
+- Pour un utilisateur de lecteur d'écran : impossibilité d'identifier la fonction du champ d'entrer lors du parcours et perte de l'information d'aide sur les critères de recherche
+- Pour une personne naviguant à la souris : perte du comportement standard où le clic sur l'intitulé active le champ
 
 ### Reproduction
 
+- Ouvrir la page dans un nouvel onglet pour être au neuf
+- Activer un lecteur d'écran et atteindre le champ de recherche avec la touche `Tab`
+- Le lecteur d'écran vocalise uniquement le rôle sans annoncer ni l'intitulé du champ de recherche, ni le texte d'aide
+- Cliquer à la souris sur l'intitulé ne donne pas le focus au champ de saisie
+
 ### Comportement attendu
+
+- Associer le champ à son étiquette afin que le lecteur d'écran annonce l'intitulé du champ de recherche lors de sa sélection 
+- Lier le texte d'aide comme description accessible afin qu'il soit vocalisé à la prise de focus
+- Permettre d'activer et de donner le focus au champ en cliquant sur son libellé
 
 ### Correction à apporter
 
+- Remplacer `<p className="search-label">` par `<label className="search-label" htmlFor="workshop-search">` dans `src/App.tsx` pour lier le libellé au champ via son `id`
+- Ajouter `id="search-help"` sur le paragraphe `<p className="search-help">`
+- Ajouter `aria-describedby="search-help"` sur l'élément `<input>` du champ de recherche pour associer la description d'aide
+
 #### Résultat de la vérification
+
+- Le lecteur d'écran annonce l'étiquette « Rechercher un atelier » et le texte d'aide « Saisissez un titre ou une ville. » lors de la prise de focus
+- Cliquer sur le libellé « Rechercher un atelier » transfère immédiatement le focus dans le champ de recherche
 
 ---
 
