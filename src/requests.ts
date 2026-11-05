@@ -11,6 +11,8 @@ export type RequestDialogProps = {
   workshop: import("./workshops").Workshop;
   onClose: () => void;
   onSubmit: (values: RequestValues) => void;
+  dialogRef: React.RefObject<HTMLDialogElement | null>;
+  formRef: React.RefObject<HTMLFormElement | null>;
 };
 
 export const requestOptions = {
@@ -22,15 +24,20 @@ export const requestOptions = {
   ],
 };
 
-export function readRequest(form: HTMLFormElement, kind: RequestKind, workshopId: string): {
-  values: RequestValues; errors: RequestErrors;
+export function readRequest(
+  form: HTMLFormElement,
+  kind: RequestKind,
+  workshopId: string,
+): {
+  values: RequestValues;
+  errors: RequestErrors;
 } {
   const data = new FormData(form);
   const choice = String(data.get("choice") ?? "");
   const contact = String(data.get("contact") ?? "").trim();
   const message = String(data.get("message") ?? "").trim();
   const errors: RequestErrors = {};
-  if (!requestOptions[kind].some(option => option.value === choice)) {
+  if (!requestOptions[kind].some((option) => option.value === choice)) {
     errors.choice = "Choisissez le sujet de votre question.";
   }
   const input = form.elements.namedItem("contact") as HTMLInputElement | null;
