@@ -9,8 +9,7 @@ type Props = {
 
 export default function WorkshopCard({ workshop, onReserve, extraAction }: Props) {
   const [expanded, setExpanded] = useState(false);
-  const [notice, setNotice] = useState("");
-
+  
   return (
     <article className="workshop-card">
       <div className="card-art">
@@ -67,11 +66,6 @@ export default function WorkshopCard({ workshop, onReserve, extraAction }: Props
             </button>
           ) : <p className="closed-message">Inscriptions closes</p>}
           {extraAction}
-        </div>
-
-                  
-        <div className="registration-result" id="registration-result" role="status">
-          <p className={notice ? "notice" : "notice-empty"}>{notice}</p>
         </div>
 
       </div>
