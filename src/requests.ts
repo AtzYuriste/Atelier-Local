@@ -11,7 +11,6 @@ export type RequestDialogProps = {
   workshop: import("./workshops").Workshop;
   onClose: () => void;
   onSubmit: (values: RequestValues) => void;
-  dialogRef: React.RefObject<HTMLDialogElement | null>;
 };
 
 export const requestOptions = {

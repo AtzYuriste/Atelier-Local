@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { readRequest, RequestDialogProps, RequestErrors, requestOptions } from "../requests";
 
-export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }: RequestDialogProps) {
+export default function WorkshopModal({ workshop, onClose, onSubmit }: RequestDialogProps) {
   const modalTitle: string = `Question à propos de l'atelier ${workshop.title}`;
   const [selectedSubject, setSelectedSubject] = useState("");
   const [email, setEmail] = useState("");
@@ -9,8 +9,13 @@ export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }
   const [formErrors, setFormErrors] = useState<RequestErrors>({});
   const formRef = useRef<HTMLFormElement>(null);
   const errorsSummaryRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const errorCount = Object.keys(formErrors).length;
+
+  useEffect(() => {
+    if (!dialogRef.current?.open) dialogRef.current?.showModal();
+  }, []);
 
   useEffect(() => {
     if (errorCount > 0) errorsSummaryRef.current?.focus();
@@ -28,6 +33,7 @@ export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }
     if (hasNotErrors(errors)) {
       cleanStates();
       onSubmit(values);
+      dialogRef.current?.close();
     }
   }
 

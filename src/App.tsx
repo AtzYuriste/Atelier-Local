@@ -8,7 +8,6 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
   const [bookingCount, setBookingCount] = useState(0);
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const [questionWorkshop, setQuestionWorkshop] = useState<Workshop | null>(null);
 
   const normalized = query.trim().toLocaleLowerCase("fr");
@@ -32,12 +31,7 @@ export default function App() {
   const handleModalFormSubmit = (requestValues: RequestValues) => {
     const subject = requestOptions.question.find((o) => o.value === requestValues.choice)?.label;
     setNotice(`Votre question sur « ${questionWorkshop?.title} » (${subject}) a bien été envoyée.`);
-    dialogRef.current?.close();
   };
-
-  useEffect(() => {
-    if (questionWorkshop && !dialogRef.current?.open) dialogRef.current?.showModal();
-  }, [questionWorkshop]);
 
   return (
     <>
@@ -134,7 +128,6 @@ export default function App() {
           {questionWorkshop && (
             <WorkshopModal
               key={questionWorkshop.id}
-              dialogRef={dialogRef}
               workshop={questionWorkshop}
               onClose={handleModalClose}
               onSubmit={handleModalFormSubmit}
