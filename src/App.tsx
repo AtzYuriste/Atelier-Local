@@ -107,7 +107,7 @@ export default function App() {
                   extraAction={
                     <button
                       type="button"
-                      className="secondary-button"
+                      className="ask-a-question-button" 
                       aria-label={`Poser une question sur ${workshop.title}`}
                       onClick={() => {
                         setQuestionWorkshop(workshop);
