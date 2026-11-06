@@ -2,7 +2,7 @@
 
 ## Binôme et environnement
 
-- Membres : _à voir sur Discord_
+- Membres : jason.qiu / yannick.zheng
 - Navigateur et version : Opera One(version : 137.0.6036.63) (problèmes 1, 3, 5)
 
 ## Problème 1 - Parcours des détails d’un atelier
@@ -37,7 +37,7 @@
 
 - Remplacer la zone cliquable `<div>` de `details-trigger` par un bouton `<button>`
   - Y ajouter `type="button"` pour indiquer le rôle de bouton ;
-  - Y ajouter `aria-expanded={expanded}` pour indiquer si les détails sont affichés ou masqués ; 
+  - Y ajouter `aria-expanded={expanded}` pour indiquer si les détails sont affichés ou masqués ;
   - Y ajouter ``aria-controls={`details-${workshop.id}`}`` pour informer de l'identifiant du conteneur ;
   - Y ajouter `aria-label={`Détails de l’atelier ${workshop.title}`}` pour indiquer l'atelier concerné
 - Ajouter `hidden={!expanded}` sur le conteneur `details-panel` pour réellement retirer les détails, s'ils sont masqués
@@ -111,7 +111,7 @@
 
 ### Comportement attendu
 
-- Associer le champ à son étiquette afin que le lecteur d'écran annonce l'intitulé du champ de recherche lors de sa sélection 
+- Associer le champ à son étiquette afin que le lecteur d'écran annonce l'intitulé du champ de recherche lors de sa sélection
 - Lier le texte d'aide comme description accessible afin qu'il soit vocalisé à la prise de focus
 - Permettre d'activer et de donner le focus au champ en cliquant sur son libellé
 
@@ -165,7 +165,7 @@
 ## Problème 5 - Rupture de la hiérarchie des titres sur les cartes d'atelier
 
 ### Problème identifié
- 
+
 Le titre de chaque atelier utilise un simple paragraphe `<p className="workshop-title">` au lieu d'un élément de titre
 
 #### Impact
@@ -228,3 +228,35 @@ Le titre de chaque atelier utilise un simple paragraphe `<p className="workshop-
 
 - Le lecteur d'écran annonce le message de confirmation dès l'activation du bouton `M’inscrire à ...`
 - Le focus reste sur le bouton
+
+## Composant créé
+
+Le bouton `Poser une question` de chaque carte ouvre une fenêtre modale permettant de contacter l'organisateur au sujet de l'atelier concerné.
+
+### Principaux choix
+
+- **Une seule modale pour toute la page** : `App` mémorise l'atelier choisi et affiche un unique `WorkshopModal`, dont le contenu est remis à zéro à chaque ouverture. Le bouton est fourni à chaque carte par la propriété `extraAction`.
+- **Élément `<dialog>` natif ouvert avec `showModal()`** : le reste de la page devient inactif, le focus reste dans la fenêtre, la touche `Échap` la ferme et le focus revient au bouton `Poser une question` de la carte à la fermeture
+  - La fenêtre est nommée par `aria-labelledby` avec un titre `h2` qui contient le titre de l'atelier
+  - Le bouton de fermeture a un nom accessible (`aria-label="Fermer"`) et le caractère `×` est masqué aux lecteurs d'écran
+  - `Annuler`, `×` et `Échap` ferment sans transmettre de demande
+  - Le défilement de la page est bloqué pendant que la fenêtre est ouverte
+- **Formulaire** : un `<select>` natif sans sujet présélectionné, un champ `type="email"` (`autoComplete="email"`) et une zone de texte
+  - Chaque champ est relié à son libellé par `htmlFor` et le libellé indique `(obligatoire)`
+  - `noValidate` sur le formulaire : les erreurs viennent de `readRequest`, avec un message unique et cohérent plutôt que les bulles du navigateur
+- **Erreurs** : en cas d'envoi incomplet, la fenêtre reste ouverte et les valeurs saisies sont conservées
+  - Un récapitulatif (`N erreurs empêchent l'envoi du formulaire`) apparaît et reçoit le focus, ce qui le fait lire par le lecteur d'écran
+  - Chaque erreur du récapitulatif est un lien qui mène au champ concerné
+  - Chaque champ en erreur porte `aria-invalid="true"` et `aria-describedby` vers son message, affiché sous le champ
+  - La personne peut corriger puis renvoyer sans avoir à tout ressaisir
+- **Confirmation** : après un envoi valide, la fenêtre se ferme et le message `Votre question sur « atelier » (sujet) a bien été envoyée.` s'affiche dans la zone `role="status"` déjà utilisée pour les préinscriptions. Elle indique l'atelier et le sujet sans reprendre l'adresse électronique
+- Le bouton reste disponible lorsque l'atelier est complet
+
+### Manipulations de vérification
+
+- Au clavier, avec `Tab` : atteindre `Poser une question`, l'activer avec `Entrée` ou `Espace`, vérifier que le focus reste dans la fenêtre, puis fermer avec `Échap`, `Annuler` et `×` et vérifier que le focus revient sur le bouton de la même carte
+- Rouvrir la même carte après chaque fermeture, y compris après un envoi valide : la fenêtre se rouvre avec un formulaire vide
+- Ouvrir les fenêtres de plusieurs ateliers : le titre de la fenêtre correspond à chaque fois à l'atelier choisi, et un clic sur un libellé place le focus dans le bon champ
+- Envoyer le formulaire vide : le récapitulatif reçoit le focus dès le premier envoi, la fenêtre reste ouverte, les trois liens du récapitulatif mènent aux champs
+- Choisir un sujet et écrire une question en laissant l'adresse vide, puis envoyer : une seule erreur, le sujet et la question sont conservés, aucune confirmation n'apparaît
+- Saisir une adresse invalide (`abc`) : l'erreur est signalée. La corriger puis envoyer : la fenêtre se ferme et la confirmation indique le bon atelier et le bon sujet
