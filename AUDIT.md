@@ -263,3 +263,15 @@ Le bouton `Poser une question` de chaque carte ouvre une fenêtre modale permett
 - Choisir un sujet et écrire une question en laissant l'adresse vide, puis envoyer : une seule erreur, le sujet et la question sont conservés, aucune confirmation n'apparaît
 - Saisir une adresse invalide (`abc`) : l'erreur est signalée. La corriger puis envoyer : la fenêtre se ferme et la confirmation indique le bon atelier et le bon sujet
 - Lecteur d'écran, dans Chrome : le titre de la fenêtre, le libellé et l'état des champs, le récapitulatif d'erreurs et la confirmation sont bien dictés
+
+## Mini-test
+
+Le test `src/__tests__/Composant.test.tsx` affiche `<App />` et simule le scénario avec `userEvent`. Les éléments sont retrouvés par rôle et nom accessible (`getByRole`), ce qui vérifie aussi leur nommage.
+
+Ce qui est testé :
+
+- Ouvrir la fenêtre de `Une tasse en céramique`, choisir `Le matériel à apporter`, écrire une question, laisser l'adresse vide et envoyer
+  - la fenêtre reste ouverte, l'adresse est `aria-invalid` avec son message d'erreur (lu via `aria-describedby`), et aucune confirmation n'apparaît
+  - le sujet et la question sont conservés
+- Saisir une adresse valide et envoyer : la fenêtre se ferme et la confirmation cite l'atelier et le sujet, sans l'adresse
+- Ce test vérifie le DOM, pas ce qui est dicté : les essais au clavier et au lecteur d'écran restent nécessaires
