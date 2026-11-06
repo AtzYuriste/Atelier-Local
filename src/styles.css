@@ -743,3 +743,24 @@ dialog::backdrop {
   margin: 28px auto 45px;
   padding: 0 18px;
 }
+
+
+.ask-a-question-button {
+  width: 100%;
+  background: #183c35;
+  color: #fff;
+  border: 1px solid #183c35;
+  border-radius: 5px;
+  padding: 12px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.ask-a-question-button:hover {
+  background: #244f46;
+}
+
+.primary-button:hover {
+  background: #244f46;
+}
