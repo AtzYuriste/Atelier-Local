@@ -1,7 +1,5 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { Workshop } from "../workshops";
-import WorkshopModal from "./WorkshopModal";
-import { readRequest, RequestValues } from "../requests";
 
 type Props = {
   workshop: Workshop;

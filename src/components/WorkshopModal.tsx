@@ -1,14 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { readRequest, RequestDialogProps, RequestErrors, requestOptions } from "../requests";
 
-const modalTitles: Record<string, string> = {
-  ["ceramique"]: "Question à propos de l'atelier céramique",
-  ["serigraphie"]: "Question à propos de l'atelier sérigraphie",
-  ["broderie"]: "Question à propos de l'atelier broderie",
-};
-
 export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }: RequestDialogProps) {
-  const modalTitle: string = modalTitles[workshop.id];
+  const modalTitle: string = `Question à propos de l'atelier ${workshop.title}`;
   const [selectedSubject, setSelectedSubject] = useState("");
   const [email, setEmail] = useState("");
   const [question, setQuestion] = useState("");
@@ -57,8 +51,8 @@ export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }
     <dialog ref={dialogRef} aria-labelledby="question-title" onClose={() => handleClose()}>
       <div className="dialog-heading">
         <h2 id="question-title">{modalTitle}</h2>
-        <button className="close-button" onClick={() => dialogRef.current?.close()}>
-          ×
+        <button type="button" className="close-button" onClick={() => dialogRef.current?.close()} aria-label="Fermer">
+          <span aria-hidden="true">×</span>
         </button>
       </div>
       {errorCount > 0 && (
@@ -76,65 +70,70 @@ export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }
         </div>
       )}
       <form ref={formRef} onSubmit={(e) => handleSubmit(e)} noValidate>
-        <label htmlFor="choice">{"Choisissez un sujet : "}</label>
-        <select
-          name="choice"
-          id="choice"
-          className="dialog-actions field"
-          value={selectedSubject}
-          onChange={(e) => setSelectedSubject(e.target.value)}
-          aria-describedby="choice-error"
-          aria-invalid={!!formErrors.choice}
-        >
-          <option value="">--Veuillez choisir une option--</option>
-          {requestOptions.question.map((q) => {
-            return (
-              <option key={q.value} value={q.value}>
-                {q.label}
-              </option>
-            );
-          })}
-        </select>
-        <p id="choice-error" className="field-error">
-          {formErrors.choice}
-        </p>
+        <div className="field">
+          <label htmlFor="choice">{"Choisissez un sujet (obligatoire) : "}</label>
+          <select
+            name="choice"
+            id="choice"
+            value={selectedSubject}
+            onChange={(e) => setSelectedSubject(e.target.value)}
+            aria-describedby="choice-error"
+            aria-invalid={!!formErrors.choice}
+          >
+            <option value="">--Veuillez choisir une option--</option>
+            {requestOptions.question.map((q) => {
+              return (
+                <option key={q.value} value={q.value}>
+                  {q.label}
+                </option>
+              );
+            })}
+          </select>
+          <p id="choice-error" className="field-error">
+            {formErrors.choice}
+          </p>
+        </div>
 
-        <label htmlFor="contact">Adresse électronique</label>
-        <input
-          id="contact"
-          className="dialog-actions field"
-          name="contact"
-          autoComplete="email"
-          value={email}
-          type="email"
-          onChange={(e) => setEmail(e.target.value)}
-          aria-describedby="contact-error"
-          aria-invalid={!!formErrors.contact}
-        />
-        <p id="contact-error" className="field-error">
-          {formErrors.contact}
-        </p>
+        <div className="field">
+          <label htmlFor="contact">Adresse électronique (obligatoire)</label>
+          <input
+            id="contact"
+            name="contact"
+            autoComplete="email"
+            value={email}
+            type="email"
+            onChange={(e) => setEmail(e.target.value)}
+            aria-describedby="contact-error"
+            aria-invalid={!!formErrors.contact}
+          />
+          <p id="contact-error" className="field-error">
+            {formErrors.contact}
+          </p>
+        </div>
 
-        <label htmlFor="message">Votre question : </label>
-        <textarea
-          id="message"
-          name="message"
-          className="dialog-actions field"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          aria-describedby="message-error"
-          aria-invalid={!!formErrors.message}
-        />
-        <p id="message-error" className="field-error">
-          {formErrors.message}
-        </p>
+        <div className="field">
+          <label htmlFor="message">Votre question (obligatoire) : </label>
+          <textarea
+            id="message"
+            name="message"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            aria-describedby="message-error"
+            aria-invalid={!!formErrors.message}
+          />
+          <p id="message-error" className="field-error">
+            {formErrors.message}
+          </p>
+        </div>
 
-        <button className="secondary-button dialog-actions" type="button" onClick={() => dialogRef.current?.close()}>
-          Annuler
-        </button>
-        <button className="primary-button dialog-actions" type="submit">
-          Soumettre
-        </button>
+        <div className="dialog-actions">
+          <button className="secondary-button" type="button" onClick={() => dialogRef.current?.close()}>
+            Annuler
+          </button>
+          <button className="primary-button" type="submit">
+            Soumettre
+          </button>
+        </div>
       </form>
     </dialog>
   );
