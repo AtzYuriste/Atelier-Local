@@ -12,7 +12,6 @@ export type RequestDialogProps = {
   onClose: () => void;
   onSubmit: (values: RequestValues) => void;
   dialogRef: React.RefObject<HTMLDialogElement | null>;
-  formRef: React.RefObject<HTMLFormElement | null>;
 };
 
 export const requestOptions = {

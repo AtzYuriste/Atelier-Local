@@ -12,7 +12,6 @@ type Props = {
 export default function WorkshopCard({ workshop, onReserve, extraAction }: Props) {
   const [expanded, setExpanded] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
 
   const openModal = () => {
     if (dialogRef.current) {
@@ -27,8 +26,9 @@ export default function WorkshopCard({ workshop, onReserve, extraAction }: Props
   };
 
   const handleModalFormSubmit = (requestValues: RequestValues) => {
-    if (!formRef.current) return;
-    const { values, errors } = readRequest(formRef.current, requestValues.kind, requestValues.workshopId);
+    if (dialogRef.current) {
+      dialogRef.current.close();
+    }
   };
 
   return (
@@ -94,7 +94,6 @@ export default function WorkshopCard({ workshop, onReserve, extraAction }: Props
         </div>
         <WorkshopModal
           dialogRef={dialogRef}
-          formRef={formRef}
           workshop={workshop}
           onClose={handleModalClose}
           onSubmit={handleModalFormSubmit}
