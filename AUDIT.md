@@ -3,7 +3,9 @@
 ## Binôme et environnement
 
 - Membres : jason.qiu / yannick.zheng
-- Navigateur et version : Opera One(version : 137.0.6036.63) (problèmes 1, 3, 5)
+- Navigateur et version :
+  - Opera One(version : 137.0.6036.63) (problèmes 1, 3, 5)
+  - Chrome (Version 156.0.8078.80) (problème 2, 4, 6 + composant crée)
 
 ## Problème 1 - Parcours des détails d’un atelier
 
@@ -260,3 +262,4 @@ Le bouton `Poser une question` de chaque carte ouvre une fenêtre modale permett
 - Envoyer le formulaire vide : le récapitulatif reçoit le focus dès le premier envoi, la fenêtre reste ouverte, les trois liens du récapitulatif mènent aux champs
 - Choisir un sujet et écrire une question en laissant l'adresse vide, puis envoyer : une seule erreur, le sujet et la question sont conservés, aucune confirmation n'apparaît
 - Saisir une adresse invalide (`abc`) : l'erreur est signalée. La corriger puis envoyer : la fenêtre se ferme et la confirmation indique le bon atelier et le bon sujet
+- Lecteur d'écran, dans Chrome : le titre de la fenêtre, le libellé et l'état des champs, le récapitulatif d'erreurs et la confirmation sont bien dictés
