@@ -11,25 +11,6 @@ type Props = {
 
 export default function WorkshopCard({ workshop, onReserve, extraAction }: Props) {
   const [expanded, setExpanded] = useState(false);
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  const openModal = () => {
-    if (dialogRef.current) {
-      dialogRef.current.showModal();
-    }
-  };
-
-  const handleModalClose = () => {
-    if (dialogRef.current) {
-      dialogRef.current.close();
-    }
-  };
-
-  const handleModalFormSubmit = (requestValues: RequestValues) => {
-    if (dialogRef.current) {
-      dialogRef.current.close();
-    }
-  };
 
   return (
     <article className="workshop-card">
@@ -88,16 +69,7 @@ export default function WorkshopCard({ workshop, onReserve, extraAction }: Props
             <p className="closed-message">Inscriptions closes</p>
           )}
           {extraAction}
-          <button className="secondary-button" onClick={openModal}>
-            Poser une question
-          </button>
         </div>
-        <WorkshopModal
-          dialogRef={dialogRef}
-          workshop={workshop}
-          onClose={handleModalClose}
-          onSubmit={handleModalFormSubmit}
-        ></WorkshopModal>
       </div>
     </article>
   );

@@ -13,18 +13,13 @@ export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }
   const [email, setEmail] = useState("");
   const [question, setQuestion] = useState("");
   const [formErrors, setFormErrors] = useState<RequestErrors>({});
-  const [formErrorNumber, setFormErrorNumber] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
+  const errorsSummaryRef = useRef<HTMLDivElement>(null);
+
+  const errorCount = Object.keys(formErrors).length;
 
   useEffect(() => {
-    for (const k of Object.keys(formErrors)) {
-      if (k) {
-        setFormErrorNumber((n) => n + 1);
-      }
-    }
-    return () => {
-      setFormErrorNumber(0);
-    };
+    if (errorCount > 0) errorsSummaryRef.current?.focus();
   }, [formErrors]);
 
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
@@ -35,7 +30,7 @@ export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }
     }
     const { values, errors } = readRequest(formRef.current, "question", workshop.id);
     setFormErrors(errors);
-
+    errorsSummaryRef.current?.focus();
     if (hasNotErrors(errors)) {
       cleanStates();
       onSubmit(values);
@@ -59,24 +54,28 @@ export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }
   }
 
   return (
-    <dialog ref={dialogRef} aria-labelledby="question-title">
+    <dialog ref={dialogRef} aria-labelledby="question-title" onClose={() => handleClose()}>
       <div className="dialog-heading">
         <h2 id="question-title">{modalTitle}</h2>
-        <button className="close-button" onClick={() => handleClose()}>
+        <button className="close-button" onClick={() => dialogRef.current?.close()}>
           ×
         </button>
       </div>
-      {formErrorNumber > 0 && (
-        <div className="error-summary" role="status">
-          <h3>{formErrorNumber} erreurs empêchent l'envoi du formulaire</h3>
+      {errorCount > 0 && (
+        <div ref={errorsSummaryRef} tabIndex={-1} className="error-summary">
+          <h3>
+            {errorCount} {errorCount > 1 ? "erreurs empêchent" : "erreur empêche"} l'envoi du formulaire
+          </h3>
           <ul>
-            {Object.entries(formErrors).map((entry) => (
-              <li key={entry[0]}>{entry[1]}</li>
+            {Object.entries(formErrors).map(([field, message]) => (
+              <li key={field}>
+                <a href={`#${field}`}>{message}</a>
+              </li>
             ))}
           </ul>
         </div>
       )}
-      <form ref={formRef} onSubmit={(e) => handleSubmit(e)}>
+      <form ref={formRef} onSubmit={(e) => handleSubmit(e)} noValidate>
         <label htmlFor="choice">{"Choisissez un sujet : "}</label>
         <select
           name="choice"
@@ -84,6 +83,8 @@ export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }
           className="dialog-actions field"
           value={selectedSubject}
           onChange={(e) => setSelectedSubject(e.target.value)}
+          aria-describedby="choice-error"
+          aria-invalid={!!formErrors.choice}
         >
           <option value="">--Veuillez choisir une option--</option>
           {requestOptions.question.map((q) => {
@@ -94,6 +95,9 @@ export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }
             );
           })}
         </select>
+        <p id="choice-error" className="field-error">
+          {formErrors.choice}
+        </p>
 
         <label htmlFor="contact">Adresse électronique</label>
         <input
@@ -102,9 +106,14 @@ export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }
           name="contact"
           autoComplete="email"
           value={email}
+          type="email"
           onChange={(e) => setEmail(e.target.value)}
           aria-describedby="contact-error"
+          aria-invalid={!!formErrors.contact}
         />
+        <p id="contact-error" className="field-error">
+          {formErrors.contact}
+        </p>
 
         <label htmlFor="message">Votre question : </label>
         <textarea
@@ -113,9 +122,14 @@ export default function WorkshopModal({ workshop, onClose, onSubmit, dialogRef }
           className="dialog-actions field"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
+          aria-describedby="message-error"
+          aria-invalid={!!formErrors.message}
         />
+        <p id="message-error" className="field-error">
+          {formErrors.message}
+        </p>
 
-        <button className="secondary-button dialog-actions" type="button" onClick={() => handleClose()}>
+        <button className="secondary-button dialog-actions" type="button" onClick={() => dialogRef.current?.close()}>
           Annuler
         </button>
         <button className="primary-button dialog-actions" type="submit">

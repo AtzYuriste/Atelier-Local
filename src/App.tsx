@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import WorkshopCard from "./components/WorkshopCard";
 import { workshops, type Workshop } from "./workshops";
+import { requestOptions, RequestValues } from "./requests";
+import WorkshopModal from "./components/WorkshopModal";
 
 export default function App() {
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
   const [bookingCount, setBookingCount] = useState(0);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [questionWorkshop, setQuestionWorkshop] = useState<Workshop | null>(null);
+
   const normalized = query.trim().toLocaleLowerCase("fr");
   const visible = workshops.filter((workshop) =>
     `${workshop.title} ${workshop.location}`.toLocaleLowerCase("fr").includes(normalized),
@@ -19,6 +24,20 @@ export default function App() {
       `Préinscription de démonstration n° ${next} enregistrée pour ${workshop.title}. Aucun paiement ni réservation réelle.`,
     );
   };
+
+  const handleModalClose = () => {
+    setQuestionWorkshop(null);
+  };
+
+  const handleModalFormSubmit = (requestValues: RequestValues) => {
+    const subject = requestOptions.question.find((o) => o.value === requestValues.choice)?.label;
+    setNotice(`Votre question sur « ${questionWorkshop?.title} » (${subject}) a bien été envoyée.`);
+    dialogRef.current?.close();
+  };
+
+  useEffect(() => {
+    if (questionWorkshop && !dialogRef.current?.open) dialogRef.current?.showModal();
+  }, [questionWorkshop]);
 
   return (
     <>
@@ -87,7 +106,23 @@ export default function App() {
           {visible.length > 0 ? (
             <div className="workshop-grid">
               {visible.map((workshop) => (
-                <WorkshopCard key={workshop.id} workshop={workshop} onReserve={reserve} />
+                <WorkshopCard
+                  key={workshop.id}
+                  workshop={workshop}
+                  onReserve={reserve}
+                  extraAction={
+                    <button
+                      type="button"
+                      className="secondary-button"
+                      aria-label={`Poser une question sur ${workshop.title}`}
+                      onClick={() => {
+                        setQuestionWorkshop(workshop);
+                      }}
+                    >
+                      Poser une question
+                    </button>
+                  }
+                />
               ))}
             </div>
           ) : (
@@ -96,6 +131,15 @@ export default function App() {
           <div className="registration-result" id="registration-result" role="status">
             <p className={notice ? "notice" : "notice-empty"}>{notice}</p>
           </div>
+          {questionWorkshop && (
+            <WorkshopModal
+              key={questionWorkshop.id}
+              dialogRef={dialogRef}
+              workshop={questionWorkshop}
+              onClose={handleModalClose}
+              onSubmit={handleModalFormSubmit}
+            ></WorkshopModal>
+          )}
         </section>
 
         <section className="how-it-works" id="infos-pratiques" aria-labelledby="how-title">
